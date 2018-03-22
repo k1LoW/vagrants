@@ -1,0 +1,40 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+def install_plugin(plugin)
+  system "vagrant plugin install #{plugin}" unless Vagrant.has_plugin? plugin
+end
+
+install_plugin('vagrant-vbguest')
+
+Vagrant.configure('2') do |config|
+  config.vm.box = 'centos/7'
+
+  config.vm.box_check_update = true
+
+  config.vm.synced_folder '.', '/vagrant', disabled: true
+  config.vm.synced_folder "#{ENV['HOME']}/src", '/home/vagrant/src'
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.gui = false
+    vb.cpus = 2
+    vb.memory = '2048'
+  end
+
+  config.vm.provision 'shell', inline: <<-SHELL
+    set -x
+      if ! test -f /vagrant/.setup-done; then
+        yum -y install epel-release
+        yum -y update
+        yum -y groupinstall "Development Tools"
+        yum -y install libcgroup libcgroup-devel libcap-ng libcap-ng-devel
+        yum -y install gcc-c++ git glibc-headers libffi-devel libxml2 libxml2-devel \
+          libxslt libxslt-devel libyaml-devel make openssl-devel \
+          readline readline-devel sqlite-devel zlib zlib-devel pam-devel
+        yum -y install ruby rake
+        yum -y install lxc lxc-templates
+      EOP
+        touch /vagrant/.setup-done
+      fi
+    yum update -y
+  SHELL
+end
