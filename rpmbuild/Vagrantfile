@@ -24,5 +24,7 @@ Vagrant.configure('2') do |config|
 
   config.vm.provision 'shell', inline: <<-SHELL
     yum update -y
+    yum -y install rpm-build
+    yum -y groupinstall "Development Tools"
   SHELL
 end
