@@ -26,10 +26,10 @@ Vagrant.configure('2') do |config|
     yum -y install epel-release
     yum -y update
     yum -y groupinstall "Development Tools"
-    yum -y install libcgroup libcgroup-devel libcap-ng libcap-ng-devel
+    yum -y install libcgroup libcgroup-devel libcap-ng libcap-ng-devel libcap-devel
     yum -y install gcc-c++ git glibc-headers libffi-devel libxml2 libxml2-devel \
           libxslt libxslt-devel libyaml-devel make openssl-devel \
-          readline readline-devel sqlite-devel zlib zlib-devel pam-devel
+          readline readline-devel sqlite-devel zlib zlib-devel pam-devel psmisc libcgroup-tools
     yum -y install ruby rake
     yum -y install lxc lxc-templates
   SHELL
